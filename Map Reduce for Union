@@ -1,0 +1,50 @@
+import org.apache.hadoop.conf.Configuration; 
+import org.apache.hadoop.fs.Path; 
+import org.apache.hadoop.io.Text; 
+import org.apache.hadoop.mapreduce.Job; 
+import org.apache.hadoop.mapreduce.Mapper; 
+import 
+org.apache.hadoop.mapreduce.Reducer; 
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat; 
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat; 
+import java.io.IOException; 
+public class Union { 
+// Mapper: Just emits each line as key 
+public static class UnionMapper extends Mapper<Object, Text, Text, Text> { 
+private static final Text empty = new Text(""); 
+public void map(Object key, Text value, Context context) throws 
+IOException, InterruptedException { 
+context.write(value, empty); 
+} 
+} 
+// Reducer: Writes out each unique key once (union) 
+public static class UnionReducer extends Reducer<Text, Text, Text, Text> { public 
+void reduce(Text key, Iterable<Text> values, Context context) 
+throws IOException, InterruptedException { 
+context.write(key, null); 
+} 
+} 
+public static void main(String[] args) throws Exception { 
+// Check for input arguments 
+ 
+if (args.length < 2) {
+System.err.println("Usage: Union <input path> <output path>"); 
+System.exit(-1); 
+} 
+Configuration conf = new Configuration(); 
+Job job = Job.getInstance(conf, "Union Operation"); 
+job.setJarByClass(Union.class); 
+job.setMapperClass(UnionMapper.class); 
+job.setReducerClass(UnionReducer.class); 
+job.setOutputKeyClass(Text.class); 
+job.setOutputValueClass(Text.class); 
+FileInputFormat.addInputPath(job, new Path(args[0])); 
+FileOutputFormat.setOutputPath(job, new Path(args[1])); 
+System.exit(job.waitForCompletion(true) ? 0 : 1); 
+} 
+} 
+} 
+public static void main(String[] args) throws Exception { 
+// Check for input arguments 
+ 
+if (args.length < 2) {
