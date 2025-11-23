@@ -1,0 +1,42 @@
+spark-shell 
+
+val data = sc.parallelize(List(10,20,30))
+
+data.collect
+
+:history
+
+val mapfunc = data.map(x=>x+10)
+
+mapfunc.collect
+
+val filterfunc = data.filter(x=> x!=40)
+
+filterfunc.collect
+
+val countfunc = data.count()
+
+val distinctfunc = data.distinct()
+
+val distinctfun = data.count()
+
+distinctfun.collect
+
+val unionfunc = data1.union(data2)
+
+val intersectfunc = data1.intersection(data2)
+
+val cartesianfunc = data1.cartesian(data2)
+
+val sortfunc = data.sortByKey()
+
+val groupfunc = data.groupByKey()
+
+val reducefunc = data.reduceByKey((value, x)=>(value+x)) reducefunc.collect
+
+val firstfunc = data.first()
+
+val takefunc = data.take(3)
+
+data.collect().foreach(println)
+
