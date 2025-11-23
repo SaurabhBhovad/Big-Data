@@ -1,0 +1,56 @@
+1. Create Database & Table in Hive
+create database if not exist [dbname];
+
+show database;
+
+create table table_name() 
+row format deliminated 
+fields terminated by ',';
+
+2. Partitioning 
+create table student(id int, name string, age int, institute string)
+partition by (course string)
+row format deliminated 
+fields terminated by ',';
+
+3. display 
+select * from student ;
+select * from student where course="";
+
+4. Built in Functions 
+Arithmetic
+select name,salary+50 from empl;
+
+Rational 
+select * from emp where sal >= 6070;
+
+Functions 
+select name,sqrt(sal) from emp;
+
+Min Function 
+select min(sal) from emp;
+
+Upper function 
+select id,upper(name) from emp;
+
+Order By 
+select * from emp order by salary decs;
+
+Joins 
+a. Inner Join 
+SELECT a.col1, b.col2
+FROM tableA a INNER JOIN tableB b ON a.id = b.id;
+
+2️⃣ LEFT OUTER JOIN
+SELECT a.col1, b.col2 FROM tableA a LEFT OUTER JOIN tableB b ON a.id = b.id;
+
+3️⃣ RIGHT OUTER JOIN
+SELECT a.col1, b.col2 FROM tableA a RIGHT OUTER JOIN tableB b ON a.id = b.id;
+
+4️⃣ FULL OUTER JOIN
+
+Returns all rows when there is a match in either table.
+Unmatched values = NULL.
+
+SELECT a.col1, b.col2 FROM tableA a FULL OUTER JOIN tableB b ON a.id = b.id;
+
