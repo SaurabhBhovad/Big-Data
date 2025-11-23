@@ -1,0 +1,87 @@
+Code: 
+import 
+org.apache.hadoop.conf.Configuration; 
+import org.apache.hadoop.fs.Path; 
+import 
+org.apache.hadoop.io.IntWritable; 
+import org.apache.hadoop.io.Text; 
+import org.apache.hadoop.mapreduce.Job; 
+import org.apache.hadoop.mapreduce.Mapper; 
+import org.apache.hadoop.mapreduce.Reducer; 
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat; 
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat; 
+ 
+import java.io.IOException; 
+ 
+ 
+public class Intersection { 
+ 
+ 
+// Mapper: emit each line as a key, value = 
+1 public static class IntersectionMapper 
+extends Mapper<Object, Text, Text, IntWritable> { 
+ 
+ 
+private final static IntWritable one = new IntWritable(1); 
+ 
+ 
+public void map(Object key, Text value, Context context) 
+throws IOException, InterruptedException { 
+context.write(value, one); 
+} 
+} 
+// Reducer: count how many times each key (line) appears
+public static class IntersectionReducer 
+extends Reducer<Text, IntWritable, Text, Text> { 
+ 
+ 
+public void reduce(Text key, Iterable<IntWritable> values, Context context) 
+throws IOException, InterruptedException { 
+ 
+int count = 0; 
+for (IntWritable val : values) { 
+count += val.get(); 
+} 
+ 
+ 
+// Assuming there are 2 files → intersection = lines appearing at least twice 
+if (count >= 2) { 
+context.write(key, null); 
+} 
+} 
+} 
+ 
+ 
+public static void main(String[] args) throws Exception { 
+ 
+ 
+if (args.length < 2) { 
+System.err.println("Usage: Intersection <input path> <output path>"); 
+System.exit(-1); 
+} 
+ 
+ 
+Configuration conf = new Configuration(); 
+ 
+ 
+// Run in local mode for testing (optional) 
+conf.set("fs.defaultFS", "file:///"); 
+conf.set("mapreduce.framework.name", "local");
+Job job = Job.getInstance(conf, "Intersection Operation"); 
+job.setJarByClass(Intersection.class); 
+ 
+job.setMapperClass(IntersectionMapper.class); 
+job.setReducerClass(IntersectionReducer.class); 
+ 
+job.setOutputKeyClass(Text.class); 
+job.setOutputValueClass(IntWritable.class); 
+ 
+FileInputFormat.addInputPath(job, new Path(args[0])); 
+FileOutputFormat.setOutputPath(job, new Path(args[1])); 
+ 
+System.exit(job.waitForCompletion(true) ? 0 : 1); 
+} 
+} 
+ 
+ 
+// Reducer: count how many times each key (line) appears
