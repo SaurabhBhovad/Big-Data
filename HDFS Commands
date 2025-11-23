@@ -1,0 +1,14 @@
+HDFS Commands :-
+Create directories in HDFS :-  hdfs dfs -mkdir /user/cloudera/data
+Create an empty file in HDFS :- hdfs dfs -touchz /user/cloudera/data/file1.txt
+Add the content to the file. :- echo "this is my content" | hdfs dfs - appendToFile - /user/cloudera/data/file1.txt
+Copy file from local to HDFS :- hdfs dfs -copyFromLocal localfile.txt /user/cloudera/ 
+Copy file from HDFS to local :- hdfs dfs -copyToLocal /user/cloudera/file1.txt ./ 
+Move (not copy) file from local to HDFS :- hdfs dfs -moveFromLocal localfile.txt /user/cloudera/ 
+Copy file within HDFS :- hdfs dfs -cp /user/cloudera/file1.txt /user/hadoop/ 
+Move file within HDFS :- hdfs dfs -mv /user/cloudera/file1.txt /user/hadoop/
+Delete a file :- hdfs dfs -rm /user/cloudera/file1.txt 
+Delete a directory recursively :- hdfs dfs -rm -r /user/cloudera/data/
+Show file/directory size :- hdfs dfs -du /user/cloudera/ 
+Show total size summary :- hdfs dfs -dus /user/cloudera/ 
+Display file metadata :- hdfs dfs -stat /user/cloudera/file1.txt
